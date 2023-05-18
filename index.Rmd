@@ -1,30 +1,152 @@
 ---
-title: "Untitled"
-author: "ALGF"
-date: "2023-05-17"
-output: html_document
+title: "Visor de afectaciones de la RVN"
+output: 
+   flexdashboard::flex_dashboard:
+     logo: 'https://raw.githubusercontent.com/ANALUGARITA/visor_afectaciones/main/image/logo.png'
+     orientation: rows
+     social: menu
+     source_code: paper
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#  Carga de paquetes y de datos
+library(sf)
+library(DT)
+library(shiny)
+library(rgdal)
+library(dplyr)
+library(terra)
+library(plotly)
+library(leafem)
+library(leaflet)
+library(ggplot2)
+library(leaflet.extras)
+library(flexdashboard)
+library(shinydashboard)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r datos, echo=FALSE}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Capa de polígonos: afectaciones en proyectos
+afectaciones <-
+  st_read(
+    "https://raw.githubusercontent.com/ANALUGARITA/visor_afectaciones/main/datos/CNV_afectaciones_WGS84.geojson",
+    quiet = TRUE
+  )
 
-```{r cars}
-summary(cars)
+# Capa de puntos: inventario de proyectos
+proyectos <-
+  st_read(
+    "https://raw.githubusercontent.com/ANALUGARITA/visor_afectaciones/main/datos/CNV_Proyectos_con_afectaciones_WGS84.geojson",
+    quiet = TRUE
+  )
+
 ```
 
-## Including Plots
+Afectaciones
+=======================================================================
 
-You can also embed plots, for example:
+### Afectaciones tramitadas en la Red Vial Nacional
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+Busqueda {.sidebar}
+-------------------------------------
+
+### Búsqueda de Afectaciones
+
+```{r filtro, echo=FALSE}
+
+# LISTAS PARA FILTROS
+
+# Lista ordenada de rutas + "Todas"
+lista_rutas <- unique(afectaciones$id_ruta)
+lista_rutas <- sort(lista_rutas)
+
+# Lista ordenada de afectaciones + "Todas"
+lista_afectaciones <- unique(afectaciones$id_afectacion)
+lista_afectaciones <- sort(lista_afectaciones)
+
+# PROGRAMACION DE FILTROS
+selectInput(
+  inputId = "id_ruta",
+  label = "Ruta Nacional",
+  choices = lista_rutas,
+  selected = NULL
+)
+
+selectInput(
+  inputId = "id_afectaciones",
+  label = "Identificador de afectación",
+  choices = lista_afectaciones,
+  selected = NULL
+)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Mapa1 {.tabset}
+-------------------------------------
+
+### Mapa de Proyectos
+    
+```{r}
+
+```
+
+Mapa2 {.tabset}
+-------------------------------------
+
+### Ubicacion Geografica
+    
+```{r}
+
+```
+
+
+Grafico {.tabset}
+-------------------------------------
+
+### Grafico de estado de afectaciones
+    
+```{r}
+
+```
+
+
+
+Proyectos
+=======================================================================
+
+### Inventario de proyectos con afectaciones en la Red Vial Nacional (2016-2022)
+
+
+Filtro {.sidebar}
+-------------------------------------
+
+### Filtro de Proyectos
+
+```{r}
+
+```
+
+
+Mapa3 {.tabset}
+-------------------------------------
+
+### Mapa de Proyectos
+    
+```{r}
+
+```
+
+
+Tabla {.tabset}
+-------------------------------------
+
+### Tabla
+    
+```{r}
+
+```
