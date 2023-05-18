@@ -4,8 +4,9 @@ output:
    flexdashboard::flex_dashboard:
      logo: 'https://raw.githubusercontent.com/ANALUGARITA/visor_afectaciones/main/image/logo.png'
      orientation: rows
+     theme: paper
      social: menu
-     source_code: paper
+     source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -59,29 +60,41 @@ Busqueda {.sidebar}
 ```{r filtro, echo=FALSE}
 
 # LISTAS PARA FILTROS
-
 # Lista ordenada de rutas + "Todas"
 lista_rutas <- unique(afectaciones$id_ruta)
 lista_rutas <- sort(lista_rutas)
-
 # Lista ordenada de afectaciones + "Todas"
 lista_afectaciones <- unique(afectaciones$id_afectacion)
 lista_afectaciones <- sort(lista_afectaciones)
 
-# PROGRAMACION DE FILTROS
+# FILTROS
 selectInput(
   inputId = "id_ruta",
   label = "Ruta Nacional",
   choices = lista_rutas,
   selected = NULL
 )
-
 selectInput(
   inputId = "id_afectaciones",
   label = "Identificador de afectación",
   choices = lista_afectaciones,
   selected = NULL
 )
+
+# LIMPIAR SELECCION
+actionButton(
+  inputId = "NB", 
+  label = "Nueva búsqueda"
+)
+nueva_busqueda <- function() {
+  updateSelectInput(session, "id_ruta", selected = NULL)
+  updateSelectInput(session, "id_afectaciones", selected = NULL)
+}
+observeEvent(
+  input$NB, 
+  {
+  nueva_busqueda()
+})
 
 ```
 
